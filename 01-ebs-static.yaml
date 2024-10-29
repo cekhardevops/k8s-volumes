@@ -72,4 +72,4 @@ spec:
       port: 80
       protocol: TCP # service port
       targetPort: 80 # container port
-      nodeport: 30007
+      nodePort: 30007
