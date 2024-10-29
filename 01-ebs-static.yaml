@@ -41,9 +41,11 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: ebs-static
+  labels:
+    purpose: ebs-static
 spec:
   nodeSelector:
-    topology.kubernetes.io/zone: us-east-1c
+    topology.kubernetes.io/zone: us-east-1c # make sure the nodes and volumes are in the same zone.
   containers:
     - name: nginx
       image: nginx
@@ -54,3 +56,20 @@ spec:
     - name: persistent-storage
       persistentVolumeClaim:
         claimName: ebs-static
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ebs-static
+spec:
+  type: LoadBalancer #type is Loadbalancer
+  selector:
+    purpose: ebs-static
+  ports:
+    - name: nginx-svc-ports
+      port: 80
+      protocol: TCP # service port
+      targetPort: 80 # container port
+      nodeport: 30007
